@@ -3,7 +3,7 @@ import React, { useEffect, useState }  from 'react';
 import { Layout, Row, Tabs } from 'antd';
 import 'antd/dist/antd.css'; 
 
-import Contact from '../models/Contact';
+import { createContact, updateContact, deleteContact, getContacts } from '../requests';
 
 import ContactCards from './contact-cards/ContactCards';
 import ContactForm from './contact-fom/ContactForm';
@@ -20,55 +20,15 @@ function App() {
   useEffect(() => {
     let mounted = true;
     
-    fetch('http://localhost:8000/contacts')
-      .then(data => data.json())
-      .then(contacts => {
-        if(mounted) {
-          console.log(contacts);
-          let parsedContacts = contacts.map( contact => {
-            return new Contact(contact);
-          })
-          console.log(parsedContacts);
-          setContacts(parsedContacts);
-        }
-      });
+    const fetchContacts = async () => {
+      let contacts = await getContacts();
+      setContacts(contacts);
+    }
+
+    if(mounted) fetchContacts();
+
     return () => mounted = false;
   }, []);
-
-  const createContact = (values) => {
-    fetch('https://localhost:8000/contacts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-  };
-
-  const deleteContact = (contactId) => {
-    fetch(`https://localhost:8000/contacts/${contactId}`, {
-      method: 'DELETE',
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-    console.log(`Deleting contact.. ${contactId}`);
-  };
-
-  const updateContact = (contact = {}) => {
-    console.log(`Updating contact.. ${contact.firstName}`);
-  };
 
   return (
     <div className="App">

@@ -9,12 +9,14 @@ import './ContactForm.css';
 function ContactForm(props) {
   return (
     <Col span={props.cardSpan}>
-      <Card title={
-        <div>
-          <UserAddOutlined style={{marginRight: '10px'}}/>
-          Add new contact
-        </div>
-      }>
+      <Card 
+        title={
+          <div>
+            <UserAddOutlined className="form-icon"/>
+            Add new contact
+          </div>
+        }
+      >
         <Form
           name="addContact"
           onFinish={props.onSubmit}
