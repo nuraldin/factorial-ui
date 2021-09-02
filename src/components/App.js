@@ -1,12 +1,14 @@
 import React, { useEffect, useState }  from 'react';
 
-import { Image, Layout, Row, Col, Card, Tabs } from 'antd';
-import { UserAddOutlined } from '@ant-design/icons';
+import { Layout, Row, Tabs } from 'antd';
+import 'antd/dist/antd.css'; 
 
-import contactsLogo from '../images/contactsLogo.svg';
 import Contact from '../models/Contact';
 
-import 'antd/dist/antd.css'; 
+import ContactCards from './contact-cards/ContactCards';
+import ContactForm from './contact-fom/ContactForm';
+import HeaderContent from './header-content/HeaderContent';
+
 import './App.css';
 
 const { Header, Content } = Layout;
@@ -33,33 +35,59 @@ function App() {
     return () => mounted = false;
   }, []);
 
+  const createContact = (values) => {
+    fetch('https://localhost:8000/contacts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  };
+
+  const deleteContact = (contactId) => {
+    fetch(`https://localhost:8000/contacts/${contactId}`, {
+      method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+    console.log(`Deleting contact.. ${contactId}`);
+  };
+
+  const updateContact = (contact = {}) => {
+    console.log(`Updating contact.. ${contact.firstName}`);
+  };
+
   return (
     <div className="App">
       <Layout>
         <Header style={{ backgroundColor: '#7AC5CD'}}>
-          <div className="logo">
-            <Image 
-              src={contactsLogo} 
-              alt="contacts app logo"
-              preview={false}
-            />
-          </div>
-          <div style={{float: "left", textAlign: 'center', height: '100%', marginRight: '50px'}}>My Contacts App</div>
-          <UserAddOutlined style={{fontSize:'100%'}}/>
+          <HeaderContent />
         </Header>
         <Content className="App-content">
           <Tabs defaultActiveKey="1">
             <TabPane tab="Contacts" key="1">
-              <Row gutter={16} align={'middle'}>
-                {contacts.map(contact => {
-                  return <Col span={6}>
-                    <Card 
-                      title={`${contact.firstName} ${contact.lastName}`}
-                    >
-                      {`Email: ${contact.email} Phone: ${contact.phoneNumber}`}
-                    </Card>
-                  </Col>;
-                })}
+              <Row gutter={16} align="top" justify="space-around">
+                <ContactCards 
+                  dataSource={contacts} 
+                  onEdit={updateContact} 
+                  onDelete={deleteContact}
+                />
+                <ContactForm 
+                  onSubmit={createContact}
+                />
               </Row>
             </TabPane>
             <TabPane tab="History" key="2">

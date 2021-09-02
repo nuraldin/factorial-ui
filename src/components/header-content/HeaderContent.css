@@ -1,0 +1,13 @@
+.header-logo {
+  float: left;
+  height: 100%;
+  margin-right: 10px;
+  padding-top: 8px;
+}
+
+.header-text {
+  float: left; 
+  text-align: center; 
+  height: 100%; 
+  margin-right: 50px;
+}
