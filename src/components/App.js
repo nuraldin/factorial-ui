@@ -3,11 +3,12 @@ import React, { useEffect, useState }  from 'react';
 import { Layout, Row, Tabs } from 'antd';
 import 'antd/dist/antd.css'; 
 
-import { createContact, updateContact, deleteContact, getContacts } from '../requests';
+import { createContact, updateContact, deleteContact, getContacts, getTimeline } from '../requests';
 
 import ContactCards from './contact-cards/ContactCards';
 import ContactForm from './contact-fom/ContactForm';
 import HeaderContent from './header-content/HeaderContent';
+import ContactTimeline from './contact-timeline/ContactTimeline';
 
 import './App.css';
 
@@ -16,6 +17,7 @@ const { TabPane } = Tabs;
 
 function App() {
   const [ contacts, setContacts ] = useState([]);
+  const [ timeline, setTimeline ] = useState([]);
   
   useEffect(() => {
     let mounted = true;
@@ -23,9 +25,17 @@ function App() {
     const fetchContacts = async () => {
       let contacts = await getContacts();
       setContacts(contacts);
-    }
+    };
 
-    if(mounted) fetchContacts();
+    const fetchTimeline = async () => {
+      let timeline = await getTimeline();
+      setTimeline(timeline);
+    };
+
+    if(mounted) { 
+      fetchContacts();
+      fetchTimeline();
+    }
 
     return () => mounted = false;
   }, []);
@@ -33,7 +43,7 @@ function App() {
   return (
     <div className="App">
       <Layout>
-        <Header style={{ backgroundColor: '#7AC5CD'}}>
+        <Header style={{ backgroundColor: '#7AC5CD', fontSize: '18px'}}>
           <HeaderContent />
         </Header>
         <Content className="App-content">
@@ -51,7 +61,7 @@ function App() {
               </Row>
             </TabPane>
             <TabPane tab="History" key="2">
-              Here goes the history
+              <ContactTimeline dataSource={timeline}/>
             </TabPane>
           </Tabs>
         </Content>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Col, Card } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { UserOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import './ContactCards.css';
 
@@ -13,15 +13,22 @@ function ContactCards(props) {
         return <Col key={contact.email} span={props.cardSpan}>
           <Card 
             className='contact-card'
-            title={`${contact.firstName} ${contact.lastName}`}
+            title={
+              <>
+                <UserOutlined style={{marginRight: '10px'}} />
+                {`${contact.firstName} ${contact.lastName}`}
+              </>
+            }
             actions={[
               <EditOutlined 
                 key="edit" 
-                onClick={props.onEdit}/>,
+                onClick={props.onEdit}
+                style={{color:'green'}}
+              />,
               <DeleteOutlined
-                key="delete" 
-                className="delete-icon"
+                key="delete"
                 onClick={props.onDelete}
+                style={{color:'tomato'}}
               />
             ]}
           >
