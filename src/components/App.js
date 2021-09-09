@@ -16,29 +16,29 @@ const { Header, Content } = Layout;
 const { TabPane } = Tabs;
 
 function App() {
-  const [ contacts, setContacts ] = useState([]);
-  const [ timeline, setTimeline ] = useState([]);
-  
+  const [ data, setData ] = useState({});
+  const [ update, setUpdate ] = useState(false);
+
   useEffect(() => {
-    let mounted = true;
-    
-    const fetchContacts = async () => {
-      let contacts = await getContacts();
-      setContacts(contacts);
-    };
-
-    const fetchTimeline = async () => {
-      let timeline = await getTimeline();
-      setTimeline(timeline);
-    };
-
-    if(mounted) { 
-      fetchContacts();
-      fetchTimeline();
+    const syncWait = ms => {
+      const end = Date.now() + ms
+      while (Date.now() < end) continue
     }
 
-    return () => mounted = false;
-  }, []);
+    async function fetchData() {
+      syncWait(1);
+      let contacts = await getContacts();
+      console.log(contacts);
+      let timeline = await getTimeline();
+      console.log(timeline);
+      setData({
+        contacts,
+        timeline
+      });
+    }
+
+    fetchData();
+  }, [update]);
 
   return (
     <div className="App">
@@ -51,17 +51,19 @@ function App() {
             <TabPane tab="Contacts" key="1">
               <Row gutter={16} align="top" justify="space-around">
                 <ContactCards 
-                  dataSource={contacts} 
+                  dataSource={data.contacts} 
                   onEdit={updateContact} 
                   onDelete={deleteContact}
+                  postAction={() => setUpdate(!update) }
                 />
                 <ContactForm 
                   onSubmit={createContact}
+                  postAction={() => setUpdate(!update) }
                 />
               </Row>
             </TabPane>
             <TabPane tab="History" key="2">
-              <ContactTimeline dataSource={timeline}/>
+              <ContactTimeline dataSource={data.timeline}/>
             </TabPane>
           </Tabs>
         </Content>

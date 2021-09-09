@@ -2,8 +2,6 @@ import Contact from "./models/Contact";
 import TimelineItem from "./models/TimelineItem";
 
 const createContact = async (values) => {
-  console.log(values);
-  
   let rawData;
   try {
     rawData = await fetch('http://localhost:8000/contacts', {

@@ -19,7 +19,10 @@ function ContactForm(props) {
       >
         <Form
           name="addContact"
-          onFinish={props.onSubmit}
+          onFinish={(values) => {
+            props.onSubmit(values);
+            props.postAction();
+          }}
         >
           <Form.Item
             label="First Name"
@@ -63,11 +66,13 @@ function ContactForm(props) {
 ContactForm.propTypes = {
   cardSpan: PropTypes.number,
   onSubmit: PropTypes.func,
+  postAction: PropTypes.func
 };
 
 ContactForm.defaultProps = {
   cardSpan: 12,
   onSubmit: () => { console.log(`Submit - to be implemented...`) },
+  postAction: () => { console.log(`Callback for parent component to be implemented...`) }
 }
 
 export default ContactForm;
