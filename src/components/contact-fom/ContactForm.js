@@ -70,7 +70,7 @@ ContactForm.propTypes = {
 };
 
 ContactForm.defaultProps = {
-  cardSpan: 12,
+  cardSpan: 6,
   onSubmit: () => { console.log(`Submit - to be implemented...`) },
   postAction: () => { console.log(`Callback for parent component to be implemented...`) }
 }

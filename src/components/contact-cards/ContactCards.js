@@ -1,17 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Col } from 'antd';
 
 import './ContactCards.css';
 import ContactCard from './contact-card/ContactCard';
+import { getContacts } from '../../requests';
 
 function ContactCards(props) {
+  const [ contacts, setContacts ] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      let data = await getContacts();
+      console.log(data);
+      setContacts(data);
+    }
+
+    fetchData();
+  }, [props.triggerRefresh]);
+
   return (
     <>
-      {props.dataSource.map(contact => {
+      {contacts.map(contact => {
         return <Col key={contact.email} span={props.cardSpan}>
-          <ContactCard data={contact} onEdit={props.onEdit} onDelete={props.onDelete} postAction={props.postAction}/>
+          <ContactCard data={contact} /* onEdit={props.onEdit} onDelete={props.onDelete} postAction={props.postAction} *//>
         </Col>;
       })}
     </>
@@ -19,19 +32,17 @@ function ContactCards(props) {
 }
 
 ContactCards.propTypes = {
-  dataSource: PropTypes.array,
   cardSpan: PropTypes.number,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  postAction: PropTypes.func
+  triggerRefresh: PropTypes.bool
 };
 
 ContactCards.defaultProps = {
-  dataSource: [],
   cardSpan: 6,
   onEdit: () => { console.log(`Edit - to be implemented...`) },
   onDelete: () => { console.log(`Delete - to be implemented...`) },
-  postAction: () => { console.log(`Post action to be implemented...`) }
+  triggerRefresh: false
 }
 
 export default ContactCards;

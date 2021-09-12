@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './ContactTimeline.css';
 import { Timeline } from 'antd';
 
 import RevisionTypes from '../../models/RevisionTypes';
+import { getTimeline } from '../../requests';
 
 function itemColor(type) {
   switch(type) {
@@ -19,14 +20,26 @@ function itemColor(type) {
   }
 }
 
-
 function ContactTimeline(props) {
+  const [ timeline, setTimeline ] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      let data = await getTimeline();
+      console.log(data);
+      setTimeline(data);
+    }
+
+    fetchData();
+  }, [props.triggerRefresh]);
+
   return (
     <Timeline mode={'left'}> 
-      { props.dataSource.map( timelineItem => {
+      { timeline.map( timelineItem => {
           return (
             <Timeline.Item 
               key={`${timelineItem.date}+${timelineItem.contact}`}
+              className="timeline-item"
               label={timelineItem.date.split('T').join(' ').slice(0, -5)}
               color={itemColor(timelineItem.event)}
             >
@@ -39,11 +52,11 @@ function ContactTimeline(props) {
 }
 
 ContactTimeline.propTypes = {
-  dataSource: PropTypes.array
+  triggerRefresh: PropTypes.bool
 }
 
 ContactTimeline.defaultProps = {
-  dataSource: []
+  triggerRefresh: false
 }
 
 export default ContactTimeline;

@@ -5,23 +5,43 @@ import { Card, Typography, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 import './ContactCard.css';
+import Contact from '../../../models/Contact';
 
 function ContactCard(props) {
   const [ editToggle, setEditToggle ] = useState(false);
-  const [ data, setData ] = useState({
-    firstName: props.data.firstName || '',
-    lastName: props.data.lastName || '',
-    phoneNumber: props.data.phoneNumber || '',
-    email: props.data.email || '',
-  });
+  const [ currentData, setCurrentData ] = useState(props.data);
+
+  const [ previousData, setPreviousData ] = useState({});
  
   const editOptions = ( field ) => ({
-    onCancel: () => {
-      console.log('Canceled edit...');
-    },
-    onEnd: () => {
-      console.log('Finished edit...');
-      setEditToggle(false);
+    onChange: (value) => {
+      switch(field) {
+        case 'name':
+          console.log('Name edited...');
+          let [firstName, lastName] = value.split(' ');
+          setCurrentData({
+            ...currentData,
+            firstName,
+            lastName
+          });
+          break;
+        case 'phone':
+          console.log('Phone edited...');
+          setCurrentData({
+            ...currentData,
+            phoneNumber: value
+          }); 
+          break;
+        case 'email': 
+          console.log('Email edited...');
+          setCurrentData({
+            ...currentData,
+            email: value
+          });  
+          break;
+        default:
+          break;
+      }
     }
   });
 
@@ -31,9 +51,9 @@ function ContactCard(props) {
       title={
         <>
           <Typography.Text
-            editable={ editToggle && editOptions() }
+            editable={ editToggle && editOptions('name') }
           >
-            {`${data.firstName} ${data.lastName}`}
+            {`${currentData.firstName} ${currentData.lastName}`}
           </Typography.Text>
         </>
       }
@@ -42,7 +62,10 @@ function ContactCard(props) {
             <Tooltip placement="bottom" title="Edit Contact">
               <EditOutlined 
                 key="edit" 
-                onClick={() => { setEditToggle(!editToggle); }}
+                onClick={() => { 
+                  setPreviousData(new Contact({...currentData}));
+                  setEditToggle(!editToggle); 
+                }}
                 style={{color:'green'}}
               />
             </Tooltip>
@@ -51,7 +74,7 @@ function ContactCard(props) {
               <CheckOutlined
                 key="confirm"
                 onClick={() => { 
-                  props.onEdit(data);
+                  props.onEdit(currentData);
                   setEditToggle(false);
                 }}
                 style={{color:'green'}}
@@ -63,7 +86,7 @@ function ContactCard(props) {
               <DeleteOutlined
                 key="delete"
                 onClick={() => { 
-                  props.onDelete(data.id)
+                  props.onDelete(currentData.id)
                   props.postAction();
                 }}
                 style={{color:'tomato'}}
@@ -73,7 +96,8 @@ function ContactCard(props) {
             <Tooltip placement="bottom" title="Cancel Edit">
               <CloseOutlined
                 key="cancel"
-                onClick={() => { 
+                onClick={() => {
+                  setCurrentData(previousData);
                   setEditToggle(false);
                 }}
                 style={{color:'tomato'}}
@@ -85,17 +109,17 @@ function ContactCard(props) {
         <div className='title card-text'>Email:</div>
         <div className='card-text'>
             <Typography.Text
-            editable={ editToggle && editOptions() }
+            editable={ editToggle && editOptions('email') }
           >
-            {data.email}
+            {currentData.email}
           </Typography.Text>
         </div>
         <div className='title card-text'>Phone:</div>
         <div className='card-text'>
           <Typography.Text
-            editable={ editToggle && editOptions() }
+            editable={ editToggle && editOptions('phone') }
           >
-            {data.phoneNumber}
+            {currentData.phoneNumber}
           </Typography.Text>
         </div>
       </div>
