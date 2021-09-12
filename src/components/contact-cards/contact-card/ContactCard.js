@@ -10,7 +10,6 @@ import Contact from '../../../models/Contact';
 function ContactCard(props) {
   const [ editToggle, setEditToggle ] = useState(false);
   const [ currentData, setCurrentData ] = useState(props.data);
-
   const [ previousData, setPreviousData ] = useState({});
  
   const editOptions = ( field ) => ({
@@ -19,25 +18,19 @@ function ContactCard(props) {
         case 'name':
           console.log('Name edited...');
           let [firstName, lastName] = value.split(' ');
-          setCurrentData({
-            ...currentData,
-            firstName,
-            lastName
-          });
+          currentData.firstName = firstName;
+          currentData.lastName = lastName;
+          setCurrentData(new Contact({...currentData}));
           break;
         case 'phone':
           console.log('Phone edited...');
-          setCurrentData({
-            ...currentData,
-            phoneNumber: value
-          }); 
+          currentData.phoneNumber = value;
+          setCurrentData(new Contact({...currentData}));
           break;
         case 'email': 
           console.log('Email edited...');
-          setCurrentData({
-            ...currentData,
-            email: value
-          });  
+          currentData.email = value;
+          setCurrentData(new Contact({...currentData}));
           break;
         default:
           break;
@@ -63,6 +56,7 @@ function ContactCard(props) {
               <EditOutlined 
                 key="edit" 
                 onClick={() => { 
+                  console.log(currentData);
                   setPreviousData(new Contact({...currentData}));
                   setEditToggle(!editToggle); 
                 }}
@@ -74,7 +68,9 @@ function ContactCard(props) {
               <CheckOutlined
                 key="confirm"
                 onClick={() => { 
+                  console.log(currentData);
                   props.onEdit(currentData);
+                  props.postAction();
                   setEditToggle(false);
                 }}
                 style={{color:'green'}}
@@ -108,7 +104,7 @@ function ContactCard(props) {
       <div className='card-content'>
         <div className='title card-text'>Email:</div>
         <div className='card-text'>
-            <Typography.Text
+          <Typography.Text
             editable={ editToggle && editOptions('email') }
           >
             {currentData.email}

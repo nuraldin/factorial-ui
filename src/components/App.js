@@ -31,11 +31,18 @@ function App() {
                 <ContactCards 
                   onEdit={updateContact} 
                   onDelete={deleteContact}
+                  postAction={() => { 
+                    console.log('performing set refresh', refresh, !refresh);
+                    setRefresh(!refresh);
+                  }}
                   triggerRefresh={refresh}
                 />
                 <ContactForm 
                   onSubmit={createContact}
-                  postAction={() => setRefresh(!refresh) }
+                  postAction={() => { 
+                    console.log('performing set refresh', refresh, !refresh);
+                    setRefresh(!refresh);
+                  }}
                 />
               </Row>
             </TabPane>

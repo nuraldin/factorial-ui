@@ -1,7 +1,7 @@
 import Contact from "./models/Contact";
 import TimelineItem from "./models/TimelineItem";
 
-const createContact = async (values) => {
+const createContact = async (formData) => {
   let rawData;
   try {
     rawData = await fetch('http://localhost:8000/contacts', {
@@ -9,7 +9,7 @@ const createContact = async (values) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify(formData),
     });
   } catch(e) {
     console.error('Error', e);
@@ -29,8 +29,19 @@ const deleteContact = async (contactId) => {
   }
 };
 
-const updateContact = (contact = {}) => {
-  console.log(`Updating contact.. ${contact.firstName}`);
+const updateContact = async (contactData) => {
+  console.log(contactData);
+  try {
+    await fetch('http://localhost:8000/contacts', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(contactData.toRequestObject()),
+    });
+  } catch(e) {
+    console.error('Error', e);
+  }
 };
 
 const getContacts = async () => {

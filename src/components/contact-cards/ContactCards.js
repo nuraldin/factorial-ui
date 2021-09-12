@@ -11,7 +11,9 @@ function ContactCards(props) {
   const [ contacts, setContacts ] = useState([]);
 
   useEffect(() => {
+    const asyncWait = ms => new Promise(resolve => setTimeout(resolve, ms))
     async function fetchData() {
+      await asyncWait(100);
       let data = await getContacts();
       console.log(data);
       setContacts(data);
@@ -24,7 +26,12 @@ function ContactCards(props) {
     <>
       {contacts.map(contact => {
         return <Col key={contact.email} span={props.cardSpan}>
-          <ContactCard data={contact} /* onEdit={props.onEdit} onDelete={props.onDelete} postAction={props.postAction} *//>
+          <ContactCard 
+            data={contact} 
+            onEdit={props.onEdit} 
+            onDelete={props.onDelete} 
+            postAction={props.postAction} 
+          />
         </Col>;
       })}
     </>
