@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 
-import { Layout, Row, Tabs } from 'antd';
+import { 
+  Layout, 
+  Tabs
+} from 'antd';
 import 'antd/dist/antd.css'; 
 
-import { createContact, updateContact, deleteContact } from '../requests';
+import { 
+  updateContact, 
+  deleteContact 
+} from '../requests';
 
 import ContactCards from './contact-cards/ContactCards';
-import ContactForm from './contact-fom/ContactForm';
 import HeaderContent from './header-content/HeaderContent';
 import ContactTimeline from './contact-timeline/ContactTimeline';
 
@@ -18,35 +23,28 @@ const { TabPane } = Tabs;
 function App() {
   const [refresh, setRefresh] = useState(false);
 
+  const toggleRefresh = () => {
+    console.log('performing set refresh, changing too: ', !refresh);
+    setRefresh(!refresh);
+  };
+
   return (
     <div className="App">
       <Layout>
         <Header className="App-header">
-          <HeaderContent />
+          <HeaderContent postSubmit={toggleRefresh}/>
         </Header>
         <Content className="App-content">
           <Tabs defaultActiveKey="1">
-            <TabPane tab="Contacts" key="1">
-              <Row gutter={16} align="top" justify="space-around">
-                <ContactCards 
-                  onEdit={updateContact} 
-                  onDelete={deleteContact}
-                  postAction={() => { 
-                    console.log('performing set refresh', refresh, !refresh);
-                    setRefresh(!refresh);
-                  }}
-                  triggerRefresh={refresh}
-                />
-                <ContactForm 
-                  onSubmit={createContact}
-                  postAction={() => { 
-                    console.log('performing set refresh', refresh, !refresh);
-                    setRefresh(!refresh);
-                  }}
-                />
-              </Row>
+            <TabPane tab="Contact Ledger" key="1">
+              <ContactCards 
+                onEdit={updateContact} 
+                onDelete={deleteContact}
+                postAction={toggleRefresh}
+                triggerRefresh={refresh}
+              />
             </TabPane>
-            <TabPane tab="History" key="2">
+            <TabPane tab="Edit History" key="2">
               <ContactTimeline triggerRefresh={refresh}/>
             </TabPane>
           </Tabs>

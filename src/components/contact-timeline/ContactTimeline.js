@@ -25,9 +25,8 @@ function ContactTimeline(props) {
 
   useEffect(() => {
     async function fetchData() {
-      console.log('reading timeline...');
+      console.log('fetching timeline...');
       let data = await getTimeline();
-      console.log('setting timeline...');
       setTimeline(data);
     }
 

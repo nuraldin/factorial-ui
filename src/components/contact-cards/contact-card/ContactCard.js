@@ -69,7 +69,7 @@ function ContactCard(props) {
                 key="confirm"
                 onClick={() => { 
                   console.log(currentData);
-                  props.onEdit(currentData);
+                  //props.onEdit(currentData);
                   props.postAction();
                   setEditToggle(false);
                 }}
