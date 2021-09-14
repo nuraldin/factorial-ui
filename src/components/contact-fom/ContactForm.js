@@ -1,48 +1,81 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { Form, Input, Button } from 'antd';
 
+import { createContact } from '../../requests';
+
 import './ContactForm.css';
+import { EmailExistsError } from '../../errors';
 
 function ContactForm(props) {
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    if ( !props.visible) {
+      form.resetFields();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.visible]);
+
   return (
     <Form
+      form={form}
       name="addContact"
       onFinish={(values) => {
-        props.onSubmit(values);
+        try {
+          await createContact(values);
+        } catch(e) {
+          if ( e instanceof EmailExistsError ) {
+            console.log('the email is already in use');
+          } else {
+            console.log('there was another error while creating the user');
+          }
+        }
+        
+        form.resetFields();
         props.postAction();
       }}
     >
       <Form.Item
         label="First Name"
         name="firstName"
-        rules={[{ required: true, message: 'Please input your first name!' }]}
+        hasFeedback
+        rules={[{ pattern: /^(\w|ñ|é|ó|á|í|ú|ü)+$/, required: true, message: 'Please input your first name without spaces' }]}
       >
-        <Input />
+        <Input placeholder="e.g., Raton" />
       </Form.Item>
       <Form.Item
         label="Last Name"
         name="lastName"
-        rules={[{ required: true, message: 'Please input your last name!' }]}
+        hasFeedback
+        rules={[{ pattern: /^(\w|ñ|é|ó|á|í|ú|ü)+$/, required: true, message: 'Please input your last name without spaces' }]}
       >
-        <Input/>
+        <Input placeholder="e.g., Perez" />
       </Form.Item>
       <Form.Item
         label="Email"
         name="email"
-        rules={[{ required: true, message: 'Please input your email!' }]}
+        hasFeedback
+        rules={[
+          { required: true, message: 'Please input your email!' },
+          { type: 'email', message: 'Should be a valid email'}
+        ]}
       >
-        <Input/>
+        <Input placeholder="e.g., this@that.com"/>
       </Form.Item>
       <Form.Item
         label="Phone Number"
         name="phoneNumber"
-        rules={[{ required: true, message: 'Please input your phone number!' }]}
+        hasFeedback
+        rules={[
+          { required: true, message: 'Please input your phone number.' },
+          { pattern: /^[0-9]{9}$/, message: 'The phone number should conform to spanish standard'},
+        ]}
       >
-        <Input/>
+        <Input placeholder="e.g., 333444555"/>
       </Form.Item>
-      <Form.Item>
+      <Form.Item style={{ float: 'right'}}>
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
@@ -52,11 +85,13 @@ function ContactForm(props) {
 }
 
 ContactForm.propTypes = {
+  visible: PropTypes.bool,
   onSubmit: PropTypes.func,
   postAction: PropTypes.func
 };
 
 ContactForm.defaultProps = {
+  visible: false,
   onSubmit: () => { console.log(`Submit - to be implemented...`) },
   postAction: () => { console.log(`Callback for parent component to be implemented...`) }
 }

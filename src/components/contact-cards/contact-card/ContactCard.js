@@ -40,15 +40,14 @@ function ContactCard(props) {
 
   return (
     <Card 
-      className='contact-card'
       title={
-        <>
+        <div className='contact-title'>
           <Typography.Text
             editable={ editToggle && editOptions('name') }
           >
             {`${currentData.firstName} ${currentData.lastName}`}
           </Typography.Text>
-        </>
+        </div>
       }
       actions={[
           !editToggle ? 
