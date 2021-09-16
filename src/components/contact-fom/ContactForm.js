@@ -22,19 +22,21 @@ function ContactForm(props) {
     <Form
       form={form}
       name="addContact"
-      onFinish={(values) => {
+      onFinish={async (values) => {
         try {
           await createContact(values);
         } catch(e) {
           if ( e instanceof EmailExistsError ) {
             console.log('the email is already in use');
+            return;
           } else {
             console.log('there was another error while creating the user');
+            return;
           }
         }
-        
+
         form.resetFields();
-        props.postAction();
+        props.onSubmit();
       }}
     >
       <Form.Item
@@ -87,13 +89,11 @@ function ContactForm(props) {
 ContactForm.propTypes = {
   visible: PropTypes.bool,
   onSubmit: PropTypes.func,
-  postAction: PropTypes.func
 };
 
 ContactForm.defaultProps = {
   visible: false,
   onSubmit: () => { console.log(`Submit - to be implemented...`) },
-  postAction: () => { console.log(`Callback for parent component to be implemented...`) }
 }
 
 export default ContactForm;

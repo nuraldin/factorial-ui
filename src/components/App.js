@@ -24,7 +24,7 @@ function App() {
   const [refresh, setRefresh] = useState(false);
 
   const toggleRefresh = () => {
-    console.log('performing set refresh, changing too: ', !refresh);
+    console.log('refresh toggled');
     setRefresh(!refresh);
   };
 
@@ -32,7 +32,7 @@ function App() {
     <div className="App">
       <Layout>
         <Header className="App-header">
-          <HeaderContent postSubmit={toggleRefresh}/>
+          <HeaderContent onSubmit={toggleRefresh}/>
         </Header>
         <Content className="App-content">
           <Tabs defaultActiveKey="1">

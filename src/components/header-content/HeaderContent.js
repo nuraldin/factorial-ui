@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types';
 
 import { Image, Button, Drawer, Tooltip } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
@@ -7,7 +8,7 @@ import ContactForm from '../contact-fom/ContactForm';
 import contactsLogo from '../../images/contactsLogo.svg';
 import './HeaderContent.css';
 
-function HeaderContent() {
+function HeaderContent(props) {
   const [ visible, setVisible ] = useState(false);
 
   const showDrawer = () => setVisible(true);
@@ -47,14 +48,23 @@ function HeaderContent() {
       >
         <ContactForm 
           visible={visible}
-          postAction={() => { 
-            console.log('performing set refresh', refresh, !refresh);
-            setRefresh(!refresh);
+          onSubmit={() => {
+            setVisible(false);
+            props.onSubmit();
           }}
         />
       </Drawer>
     </div>
   );
+}
+
+
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func 
+}
+
+ContactForm.defaultProps = {
+  onSubmit: () => console.log(`On submit to be implemented...`)
 }
 
 export default HeaderContent;

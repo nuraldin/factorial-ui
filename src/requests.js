@@ -1,10 +1,11 @@
+import { EmailExistsError } from "./errors";
 import Contact from "./models/Contact";
 import TimelineItem from "./models/TimelineItem";
 
 const createContact = async (formData) => {
-  let rawData;
+  let response;
   try {
-    rawData = await fetch('http://localhost:8000/contacts', {
+    response = await fetch('http://localhost:8000/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -15,7 +16,15 @@ const createContact = async (formData) => {
     console.error('Error', e);
   }
 
-  let data = await rawData.json();
+  let data = await response.json();
+  if( !response.ok ) {
+    if ( data.email ) {
+      throw new EmailExistsError(`There is already the same email in db.`) ;
+    } else {
+      throw new Error(`There is another error in request.`);
+    }
+  }
+
   return data;
 };
 

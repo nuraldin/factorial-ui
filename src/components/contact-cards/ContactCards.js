@@ -11,44 +11,36 @@ import './ContactCards.css';
 const ANTD_SECTIONS = 24;
 
 function ContactCards(props) {
-  const [ contacts, setContacts ] = useState([]);
   const [ contactView, setContactView ] = useState([]);
   const contactsPerRow = 4;  
-  const cardSpan = Math.floor(ANTD_SECTIONS / contactsPerRow);
+  const cardSpan = Math.floor( ANTD_SECTIONS  / contactsPerRow );
 
   useEffect(() => {
-    console.log("Refreshing contacts...");
     const asyncWait = ms => new Promise(resolve => setTimeout(resolve, ms))
     async function fetchData() {
       await asyncWait(100);
-      console.log('Fetching contacts..');
-      let data = await getContacts();
-      setContacts(data);
+      let contacts = await getContacts();
+      
+      if ( contacts.length > 0 ) {
+        let contactRows = [];
+        do {
+          let currentRow = contacts.splice(0, contactsPerRow);
+          contactRows.push(currentRow);
+        } while ( contacts.length > 0 );
+        setContactView(contactRows);
+      }
     }
 
     fetchData();
   }, [props.triggerRefresh]);
-
-  useEffect(() => {
-    if ( contacts.length > 0 ) {
-      console.log("Refreshing contact view...");
-      const contactRows = [];
-      let currentRow = [];
-      let contactsCopy = [...contacts];
-      do {
-        let currentRow = contactsCopy.splice(0, contactsPerRow);
-        contactRows.push(currentRow);
-      } while ( currentRow.length > 0 );
-      setContactView(contactRows);
-    }
-  }, [contacts]);
   
   return (
     <> 
       {contactView.map( (contactRow, index) => { 
-        return <Row key={index} gutter={16} align="top" justify="space-around">
-          {contactRow.map((contact, index) => {
-            return <Col key={index} span={cardSpan}>
+        console.log(contactRow);
+        return <Row key={index} gutter={6} justify="space-around" style={{marginTop: '16px' }}>
+          {contactRow.map((contact) => {
+            return <Col key={contact.email} span={cardSpan}>
               <ContactCard 
                 data={contact} 
                 onEdit={props.onEdit} 
