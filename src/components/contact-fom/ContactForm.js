@@ -31,15 +31,12 @@ function ContactForm(props) {
         } catch(e) {
           if ( e instanceof EmailExistsError ) {
             setEmailExists(true);
+            setTimeout(() => setEmailExists(false), 3000);
             return;
           } else {
             console.log('there was another error while creating the user');
             return;
           }
-        }
-
-        if ( emailExists ) {
-          setEmailExists(false);
         }
 
         form.resetFields();

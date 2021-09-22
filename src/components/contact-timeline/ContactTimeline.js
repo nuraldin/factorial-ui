@@ -36,10 +36,10 @@ function ContactTimeline(props) {
   if ( timeline.length > 0 ) {
     return (
       <Timeline mode={'left'}> 
-        { timeline.map( timelineItem => {
+        { timeline.map( ( timelineItem, index ) => {
             return (
               <Timeline.Item 
-                key={`${timelineItem.date}+${timelineItem.contact}`}
+                key={`${index}+${timelineItem.contact}`}
                 className="timeline-item"
                 label={timelineItem.date.split('T').join(' ').slice(0, -5)}
                 color={itemColor(timelineItem.event)}
