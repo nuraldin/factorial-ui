@@ -1,6 +1,5 @@
 import { EmailExistsError } from "./errors";
-import Contact from "./models/Contact";
-import TimelineItem from "./models/TimelineItem";
+import { Contact, TimelineItem } from "./models";
 
 const createContact = async (formData) => {
   let response;
@@ -18,11 +17,8 @@ const createContact = async (formData) => {
 
   let data = await response.json();
   if( !response.ok ) {
-    if ( data.email ) {
-      throw new EmailExistsError(`There is already the same email in db.`) ;
-    } else {
-      throw new Error(`There is another error in request.`);
-    }
+    if ( data.payload.email ) throw new EmailExistsError(`There is already the same email in db.`) ;
+    else throw new Error(`There is another error in request.`);
   }
 
   return data;
@@ -39,7 +35,6 @@ const deleteContact = async (contactId) => {
 };
 
 const updateContact = async (contactData) => {
-  console.log(contactData);
   try {
     await fetch('http://localhost:8000/contacts', {
       method: 'PUT',
@@ -57,7 +52,7 @@ const getContacts = async () => {
   let rawData = await fetch('http://localhost:8000/contacts');
   let data = await rawData.json();
 
-  let contacts = data.map( contact => {
+  let contacts = data.payload.map( contact => {
     return new Contact(contact);
   })
 
@@ -68,7 +63,7 @@ const getTimeline = async () => {
   let rawData = await fetch('http://localhost:8000/history');
   let data = await rawData.json();
 
-  let timeline = data.map( timeline => {
+  let timeline = data.payload.map( timeline => {
     return new TimelineItem(timeline);
   })
 

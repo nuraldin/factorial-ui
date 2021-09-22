@@ -1,36 +1,60 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { Card, Typography, Tooltip } from 'antd';
+import { Card, Typography, Tooltip, Alert } from 'antd';
 import { EditOutlined, DeleteOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
-import './ContactCard.css';
 import Contact from '../../../models/Contact';
+
+import './ContactCard.css';
 
 function ContactCard(props) {
   const [ editToggle, setEditToggle ] = useState(false);
   const [ currentData, setCurrentData ] = useState(props.data);
   const [ previousData, setPreviousData ] = useState({});
+
+  const [ wrongName, setWrongName ] = useState(false); 
+  const [ wrongEmail, setWrongEmail ] = useState(false); 
+  const [ wrongPhone, setWrongPhone ] = useState(false); 
+
+  const toggle = ( fn ) => () => {
+    setTimeout(() => {
+      fn(false);
+    }, 2000);
+    fn(true) 
+  } 
+
+  const validPhone = /^[0-9]{9}$/;
+  const validEmail = /^\w+\.?\w+@\w+(.com){1}$/;
+  const validName = /^\w+ \w+$/;
+
+  const validateAndSave = (value = '', validator = /.*/, failFn = () => {}, saveFn = () => {}) => {
+    if ( !(validator.test(value)) ) failFn();
+    else saveFn(value);
+  };
  
   const editOptions = ( field ) => ({
     onChange: (value) => {
       switch(field) {
         case 'name':
-          console.log('Name edited...');
-          let [firstName, lastName] = value.split(' ');
-          currentData.firstName = firstName;
-          currentData.lastName = lastName;
-          setCurrentData(new Contact({...currentData}));
+          validateAndSave(value, validName, toggle(setWrongName), ( validatedValue ) => { 
+            let [firstName, lastName] = validatedValue.split(' ');
+            currentData.firstName = firstName;
+            currentData.lastName = lastName;
+            setCurrentData(new Contact({...currentData}))
+          });
           break;
         case 'phone':
-          console.log('Phone edited...');
-          currentData.phoneNumber = value;
-          setCurrentData(new Contact({...currentData}));
+          validateAndSave(value, validPhone, toggle(setWrongPhone), (validatedValue) => {
+            currentData.phoneNumber = validatedValue;
+            setCurrentData(new Contact({...currentData}))
+          });
           break;
         case 'email': 
-          console.log('Email edited...');
-          currentData.email = value;
-          setCurrentData(new Contact({...currentData}));
+          validateAndSave(value, validEmail, toggle(setWrongEmail), ( validatedValue ) => { 
+            currentData.email = validatedValue;
+            setCurrentData(new Contact({...currentData}))
+          });
           break;
         default:
           break;
@@ -47,6 +71,15 @@ function ContactCard(props) {
           >
             {`${currentData.firstName} ${currentData.lastName}`}
           </Typography.Text>
+          { 
+            wrongName ? 
+              <Alert 
+                style={{}} 
+                message="Name not valid" 
+                type="error" 
+                showIcon 
+              /> : null
+          }
         </div>
       }
       actions={[
@@ -55,7 +88,6 @@ function ContactCard(props) {
               <EditOutlined 
                 key="edit" 
                 onClick={() => { 
-                  console.log(currentData);
                   setPreviousData(new Contact({...currentData}));
                   setEditToggle(!editToggle); 
                 }}
@@ -108,6 +140,15 @@ function ContactCard(props) {
           >
             {currentData.email}
           </Typography.Text>
+          { 
+            wrongEmail ? 
+              <Alert 
+                style={{}} 
+                message="Email not valid" 
+                type="error" 
+                showIcon 
+              /> : null
+          }
         </div>
         <div className='title card-text'>Phone:</div>
         <div className='card-text'>
@@ -116,6 +157,15 @@ function ContactCard(props) {
           >
             {currentData.phoneNumber}
           </Typography.Text>
+          { 
+            wrongPhone ? 
+              <Alert 
+                style={{}} 
+                message="Phone not valid" 
+                type="error" 
+                showIcon 
+              /> : null
+          }
         </div>
       </div>
     </Card>

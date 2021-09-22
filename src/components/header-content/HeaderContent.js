@@ -6,6 +6,7 @@ import { UserAddOutlined } from '@ant-design/icons';
 
 import ContactForm from '../contact-fom/ContactForm';
 import contactsLogo from '../../images/contactsLogo.svg';
+
 import './HeaderContent.css';
 
 function HeaderContent(props) {
@@ -13,7 +14,6 @@ function HeaderContent(props) {
 
   const showDrawer = () => setVisible(true);
   const onClose = () => { 
-    console.log('Called on close...');
     setVisible(false);
   }
 

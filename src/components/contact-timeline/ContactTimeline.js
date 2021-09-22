@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import './ContactTimeline.css';
-import { Timeline } from 'antd';
+import { Timeline, Empty } from 'antd';
 
 import RevisionTypes from '../../models/RevisionTypes';
 import { getTimeline } from '../../requests';
+
+import './ContactTimeline.css';
 
 function itemColor(type) {
   switch(type) {
@@ -25,7 +26,6 @@ function ContactTimeline(props) {
 
   useEffect(() => {
     async function fetchData() {
-      console.log('fetching timeline...');
       let data = await getTimeline();
       setTimeline(data);
     }
@@ -33,22 +33,24 @@ function ContactTimeline(props) {
     fetchData();
   }, [props.triggerRefresh]);
 
-  return (
-    <Timeline mode={'left'}> 
-      { timeline.map( timelineItem => {
-          return (
-            <Timeline.Item 
-              key={`${timelineItem.date}+${timelineItem.contact}`}
-              className="timeline-item"
-              label={timelineItem.date.split('T').join(' ').slice(0, -5)}
-              color={itemColor(timelineItem.event)}
-            >
-              {timelineItem.toString()}
-            </Timeline.Item>
-          );
-      })}
-    </Timeline>
-  );
+  if ( timeline.length > 0 ) {
+    return (
+      <Timeline mode={'left'}> 
+        { timeline.map( timelineItem => {
+            return (
+              <Timeline.Item 
+                key={`${timelineItem.date}+${timelineItem.contact}`}
+                className="timeline-item"
+                label={timelineItem.date.split('T').join(' ').slice(0, -5)}
+                color={itemColor(timelineItem.event)}
+              >
+                {timelineItem.toString()}
+              </Timeline.Item>
+            );
+        })}
+      </Timeline>
+    );
+  } else return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<div>No Timeline</div>}/>;
 }
 
 ContactTimeline.propTypes = {

@@ -1,16 +1,9 @@
 import React, { useState } from 'react';
 
-import { 
-  Layout, 
-  Tabs
-} from 'antd';
+import { Layout, Tabs } from 'antd';
 import 'antd/dist/antd.css'; 
 
-import { 
-  updateContact, 
-  deleteContact 
-} from '../requests';
-
+import { updateContact, deleteContact } from '../requests';
 import ContactCards from './contact-cards/ContactCards';
 import HeaderContent from './header-content/HeaderContent';
 import ContactTimeline from './contact-timeline/ContactTimeline';
@@ -24,7 +17,6 @@ function App() {
   const [refresh, setRefresh] = useState(false);
 
   const toggleRefresh = () => {
-    console.log('refresh toggled');
     setRefresh(!refresh);
   };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import { Row, Col } from 'antd';
+import { Row, Col, Empty } from 'antd';
 
 import ContactCard from './contact-card/ContactCard';
 import { getContacts } from '../../requests';
@@ -33,26 +33,27 @@ function ContactCards(props) {
 
     fetchData();
   }, [props.triggerRefresh]);
-  
-  return (
-    <> 
-      {contactView.map( (contactRow, index) => { 
-        console.log(contactRow);
-        return <Row key={index} gutter={6} justify="space-around" style={{marginTop: '16px' }}>
-          {contactRow.map((contact) => {
-            return <Col key={contact.email} span={cardSpan}>
-              <ContactCard 
-                data={contact} 
-                onEdit={props.onEdit} 
-                onDelete={props.onDelete} 
-                postAction={props.postAction} 
-              />
-            </Col>;
-          })}
-        </Row>;
-      })}
-    </>
-  );
+ 
+  if ( contactView.length > 0 ) { 
+    return (
+      <> 
+        {contactView.map( (contactRow, index) => { 
+          return <Row key={index} gutter={6} justify="space-around" style={{marginTop: '16px' }}>
+            {contactRow.map((contact) => {
+              return <Col key={contact.email} span={cardSpan}>
+                <ContactCard 
+                  data={contact} 
+                  onEdit={props.onEdit} 
+                  onDelete={props.onDelete} 
+                  postAction={props.postAction} 
+                />
+              </Col>;
+            })}
+          </Row>;
+        })}
+      </>
+    );
+  } else return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<div>No Contacts</div>}/>;
 }
 
 ContactCards.propTypes = {
