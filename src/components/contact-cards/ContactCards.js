@@ -5,35 +5,29 @@ import { Row, Col, Empty } from 'antd';
 
 import ContactCard from './contact-card/ContactCard';
 import { getContacts } from '../../requests';
+import { delay, pipe } from '../../utils';
 
 import './ContactCards.css';
 
-const ANTD_SECTIONS = 24;
-
 function ContactCards(props) {
   const [ contactView, setContactView ] = useState([]);
+  
+  const ANTD_SECTIONS = 24;
   const contactsPerRow = 4;  
   const cardSpan = Math.floor( ANTD_SECTIONS  / contactsPerRow );
 
-  useEffect(() => {
-    const asyncWait = ms => new Promise(resolve => setTimeout(resolve, ms))
-    async function fetchData() {
-      await asyncWait(100);
-      let contacts = await getContacts();
-      
-      if ( contacts.length > 0 ) {
-        let contactRows = [];
-        do {
-          let currentRow = contacts.splice(0, contactsPerRow);
-          contactRows.push(currentRow);
-        } while ( contacts.length > 0 );
-        setContactView(contactRows);
-      }
+  const makeContactView = (contacts) => {  
+    let contactRows = [];
+
+    while( contacts.length > 0 ) { 
+      contactRows.push(contacts.splice(0, contactsPerRow));
     }
 
-    fetchData();
-  }, [props.triggerRefresh]);
- 
+    return contactRows ;
+  }; 
+
+  useEffect(() => pipe(delay, getContacts, makeContactView, setContactView)(200), [props.refresh]);
+
   if ( contactView.length > 0 ) { 
     return (
       <> 
@@ -45,7 +39,7 @@ function ContactCards(props) {
                   data={contact} 
                   onEdit={props.onEdit} 
                   onDelete={props.onDelete} 
-                  postAction={props.postAction} 
+                  onConfirm={props.onConfirm} 
                 />
               </Col>;
             })}
@@ -59,13 +53,15 @@ function ContactCards(props) {
 ContactCards.propTypes = {
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  triggerRefresh: PropTypes.bool
+  onConfirm: PropTypes.func,
+  refresh: PropTypes.bool
 };
 
 ContactCards.defaultProps = {
   onEdit: () => { console.log(`Edit - to be implemented...`) },
   onDelete: () => { console.log(`Delete - to be implemented...`) },
-  triggerRefresh: false
+  onConfirm: () => { console.log(`onConfirm - to be implemented...`) },
+  refresh: false
 }
 
 export default ContactCards;

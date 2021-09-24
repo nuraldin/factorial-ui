@@ -5,6 +5,7 @@ import { Timeline, Empty } from 'antd';
 
 import RevisionTypes from '../../models/RevisionTypes';
 import { getTimeline } from '../../requests';
+import { pipe } from '../../utils';
 
 import './ContactTimeline.css';
 
@@ -24,14 +25,7 @@ function itemColor(type) {
 function ContactTimeline(props) {
   const [ timeline, setTimeline ] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      let data = await getTimeline();
-      setTimeline(data);
-    }
-
-    fetchData();
-  }, [props.triggerRefresh]);
+  useEffect(() => pipe( getTimeline, setTimeline)(), [props.refresh]);
 
   if ( timeline.length > 0 ) {
     return (
@@ -54,11 +48,11 @@ function ContactTimeline(props) {
 }
 
 ContactTimeline.propTypes = {
-  triggerRefresh: PropTypes.bool
+  refresh: PropTypes.bool
 }
 
 ContactTimeline.defaultProps = {
-  triggerRefresh: false
+  refresh: false
 }
 
 export default ContactTimeline;

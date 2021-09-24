@@ -16,9 +16,7 @@ const { TabPane } = Tabs;
 function App() {
   const [refresh, setRefresh] = useState(false);
 
-  const toggleRefresh = () => {
-    setRefresh(!refresh);
-  };
+  const toggleRefresh = () => setRefresh(!refresh);
 
   return (
     <div className="App">
@@ -32,12 +30,12 @@ function App() {
               <ContactCards 
                 onEdit={updateContact} 
                 onDelete={deleteContact}
-                postAction={toggleRefresh}
-                triggerRefresh={refresh}
+                onConfirm={toggleRefresh}
+                refresh={refresh}
               />
             </TabPane>
             <TabPane tab="Edit History" key="2">
-              <ContactTimeline triggerRefresh={refresh}/>
+              <ContactTimeline refresh={refresh}/>
             </TabPane>
           </Tabs>
         </Content>

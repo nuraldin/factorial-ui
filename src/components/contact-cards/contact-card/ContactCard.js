@@ -29,6 +29,7 @@ function ContactCard(props) {
         currentData.firstName = firstName;
         currentData.lastName = lastName;
         setCurrentData(new Contact({...currentData}));
+        setEdited(true);
       }
     }, 
     email: {
@@ -37,6 +38,7 @@ function ContactCard(props) {
       onSuccess: ( value ) => { 
         currentData.email = value;
         setCurrentData(new Contact({...currentData}));
+        setEdited(true);
       }
     },
     phone: {
@@ -45,6 +47,7 @@ function ContactCard(props) {
       onSuccess: (value) => {
         currentData.phoneNumber = value;
         setCurrentData(new Contact({...currentData}));
+        setEdited(true);
       }
     }
   };
@@ -72,10 +75,12 @@ function ContactCard(props) {
       >
         <CheckOutlined
           key="confirm"
-          onClick={() => { 
+          onClick={() => {
+            console.log(edited, 'pressed confirm...');
             if ( edited ) { 
+              console.log('Sending edit confirm...');
               props.onEdit(currentData);
-              props.postAction();
+              props.onConfirm();
               setEdited(false);
             }
             setEditToggle(false);
@@ -94,7 +99,7 @@ function ContactCard(props) {
         key="delete"
         onClick={() => { 
           props.onDelete(currentData.id);
-          props.postAction();
+          props.onConfirm();
         }}
         style={{color:'tomato'}}
       />
@@ -164,14 +169,14 @@ ContactCard.propTypes = {
   data: PropTypes.object,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  postAction: PropTypes.func,
+  onConfirm: PropTypes.func,
 };
 
 ContactCard.defaultProps = {
   data: {},
   onEdit: () => { console.log(`Edit - to be implemented...`) },
   onDelete: () => { console.log(`Delete - to be implemented...`) },
-  postAction: () => { console.log(`Post action to be implemented...`) }
+  onConfirm: () => { console.log(`Confirm - to be implemented...`) }
 }
 
 export default ContactCard;
