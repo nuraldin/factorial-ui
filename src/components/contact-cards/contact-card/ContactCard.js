@@ -59,66 +59,60 @@ function ContactCard(props) {
   });
 
   const editOrConfirm = ( edit ) => {
-    return !edit ? <Tooltip 
+    return <Tooltip 
         placement="bottom" 
-        title="Edit Contact"
+        title={ edit ? "Confirm Edit" : "Edit Contact" }
       >
-        <EditOutlined 
-          key="edit" 
-          onClick={() => { 
-            setPreviousData(new Contact({...currentData}));
-            setEditToggle(!editToggle); 
-          }}
-          style={{color:'green'}}
-        />
-      </Tooltip> : <Tooltip 
-        placement="bottom" 
-        title="Confirm Edit"
-      >
-        <CheckOutlined
-          key="confirm"
-          onClick={() => {
-            console.log(edited, 'pressed confirm...');
-            if ( edited ) { 
-              console.log('Sending edit confirm...');
-              props.onEdit(currentData);
-              props.onConfirm();
-              setEdited(false);
-            }
-            setEditToggle(false);
-          }}
-          style={{color:'green'}}
-        />
+        { 
+          edit ? <CheckOutlined
+            key="confirm"
+            onClick={() => {
+              console.log(edited, 'pressed confirm...');
+              if ( edited ) { 
+                console.log('Sending edit confirm...');
+                props.onEdit(currentData);
+                props.onConfirm();
+                setEdited(false);
+              }
+              setEditToggle(false);
+            }}
+            style={{color:'green'}}
+          /> : <EditOutlined 
+            key="edit" 
+            onClick={() => { 
+              setPreviousData(new Contact({...currentData}));
+              setEditToggle(!editToggle); 
+            }}
+            style={{color:'green'}}
+          />  
+        }
       </Tooltip>;
   };
 
   const deleteOrCancel = ( edit ) => {
-    return !edit ? <Tooltip 
+    return <Tooltip 
       placement="bottom" 
-      title="Delete Contact"
+      title={ edit ? "Cancel Edit" : "Delete Contact" }
     >
-      <DeleteOutlined
-        key="delete"
-        onClick={() => { 
-          props.onDelete(currentData.id);
-          props.onConfirm();
-        }}
-        style={{color:'tomato'}}
-      />
-    </Tooltip> : <Tooltip 
-        placement="bottom" 
-        title="Cancel Edit"
-    >
-      <CloseOutlined
-        key="cancel"
-        onClick={() => {
-          setCurrentData(previousData);
-          if ( edited ) setEdited(false);
-          setEditToggle(false);
-        }}
-        style={{color:'tomato'}}
-      />
-    </Tooltip>
+      { 
+        edit ? <CloseOutlined
+          key="cancel"
+          onClick={() => {
+            setCurrentData(previousData);
+            if ( edited ) setEdited(false);
+            setEditToggle(false);
+          }}
+          style={{color:'tomato'}}
+        /> : <DeleteOutlined
+          key="delete"
+          onClick={() => { 
+            props.onDelete(currentData.id);
+            props.onConfirm();
+          }}
+          style={{color:'tomato'}}
+        />
+      }
+    </Tooltip>; 
   };
 
   const cardActions = ( toggle ) => {
