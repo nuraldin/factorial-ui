@@ -1,11 +1,13 @@
 const validPhone = /^[0-9]{9}$/;
 const validEmail = /^\w+\.?\w+@\w+(.com){1}$/;
 const validName = /^\w+ \w+$/;
+const validWord = /^(\w|ñ|é|ó|á|í|ú|ü)+$/;
 
 const validators = {
   NAME: validName,
   EMAIL: validEmail,
-  PHONE: validPhone
+  PHONE: validPhone,
+  WORD: validWord
 };
 
 // toggle a banner

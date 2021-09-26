@@ -20,6 +20,8 @@ function ContactCard(props) {
   const [ wrongEmail, setWrongEmail ] = useState(false); 
   const [ wrongPhone, setWrongPhone ] = useState(false); 
 
+  const myAlert = ( text ) => <Alert message={text} type="error" showIcon />;
+  
   const editableFields = { 
     name: {
       validator: validators.NAME,
@@ -126,13 +128,6 @@ function ContactCard(props) {
     ];
   };
 
-  const myAlert = ( text ) => <Alert 
-    style={{}} 
-    message={text} 
-    type="error" 
-    showIcon 
-  />;
-  
   return (
     <Card 
       title={

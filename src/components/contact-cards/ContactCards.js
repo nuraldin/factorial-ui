@@ -7,8 +7,6 @@ import ContactCard from './contact-card/ContactCard';
 import { getContacts } from '../../services/contact-api/index.js';
 import { delay, pipe } from '../../utils';
 
-import './ContactCards.css';
-
 function ContactCards(props) {
   const [ contactView, setContactView ] = useState([]);
   
