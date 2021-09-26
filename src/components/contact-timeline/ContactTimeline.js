@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
 import { Timeline, Empty } from 'antd';
 
 import RevisionTypes from '../../models/RevisionTypes';
-import { getTimeline } from '../../requests';
+import { getTimeline } from '../../services/contact-api/index.js';
+
 import { pipe } from '../../utils';
 
 import './ContactTimeline.css';

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Row, Col, Empty } from 'antd';
 
 import ContactCard from './contact-card/ContactCard';
-import { getContacts } from '../../requests';
+import { getContacts } from '../../services/contact-api/index.js';
 import { delay, pipe } from '../../utils';
 
 import './ContactCards.css';

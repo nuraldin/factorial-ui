@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Form, Input, Button, Alert } from 'antd';
 
-import { createContact } from '../../requests';
-import { EmailExistsError } from '../../errors';
+import { createContact } from '../../services/contact-api/index.js';
+import { EmailExistsError } from '../../models/index.js';
 
 import './ContactForm.css';
 

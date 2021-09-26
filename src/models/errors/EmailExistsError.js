@@ -5,6 +5,4 @@ class EmailExistsError extends Error {
   }
 }
 
-export {
-  EmailExistsError 
-}
+export default EmailExistsError;
