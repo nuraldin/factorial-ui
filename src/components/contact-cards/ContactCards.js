@@ -23,7 +23,7 @@ function ContactCards(props) {
     return contactRows;
   }; 
 
-  useEffect(() => utils.pipe(utils.delay, api.getContacts, makeContactView, setContactView)(200), [props.refresh]);
+  useEffect(() => utils.pipe(utils.delay(200), api.getContacts, makeContactView, setContactView)(), [props.refresh]);
 
   if ( contactView.length > 0 ) { 
     return (

@@ -23,7 +23,7 @@ function itemColor(type) {
 function ContactTimeline(props) {
   const [ timeline, setTimeline ] = useState([]);
 
-  useEffect(() => utils.pipe( api.getTimeline, setTimeline)(), [props.refresh]);
+  useEffect(() => utils.pipe(utils.delay(200), api.getTimeline, setTimeline)(), [props.refresh]);
 
   if ( timeline.length > 0 ) {
     return (

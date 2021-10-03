@@ -12,15 +12,16 @@ import './ContactCard.css';
 function ContactCard(props) {
   const [ editToggle, setEditToggle ] = useState(false);
   const [ edited, setEdited ] = useState(false);
- 
+
   const [ currentData, setCurrentData ] = useState(props.data);
   const [ previousData, setPreviousData ] = useState({});
 
   const [ wrongName, setWrongName ] = useState(false); 
   const [ wrongEmail, setWrongEmail ] = useState(false); 
-  const [ wrongPhone, setWrongPhone ] = useState(false); 
+  const [ wrongPhone, setWrongPhone ] = useState(false);
+  const [ successfulEdit, setSuccessfulEdit ] = useState(false); 
 
-  const myAlert = ( text ) => <Alert message={text} type="error" showIcon />;
+  const myAlert = ( text, type = "error" ) => <Alert message={text} type={type} showIcon />;
   
   const editableFields = { 
     name: {
@@ -67,12 +68,11 @@ function ContactCard(props) {
           edit ? <CheckOutlined
             key="confirm"
             onClick={() => {
-              console.log(edited, 'pressed confirm...');
               if ( edited ) { 
-                console.log('Sending edit confirm...');
                 props.onEdit(currentData);
                 props.onConfirm();
                 setEdited(false);
+                utils.toggle(setSuccessfulEdit)();
               }
               setEditToggle(false);
             }}
@@ -100,7 +100,6 @@ function ContactCard(props) {
           onClick={() => {
             setCurrentData(previousData);
             if ( edited ) setEdited(false);
-            setEditToggle(false);
           }}
           style={{color:'tomato'}}
         /> : <DeleteOutlined
@@ -149,6 +148,7 @@ function ContactCard(props) {
           </Typography.Text>
           { wrongPhone ? myAlert("Phone not valid") : null }
         </div>
+        { successfulEdit ? myAlert("Changes saved successfully", "success") : null}
       </div>
     </Card>
   );

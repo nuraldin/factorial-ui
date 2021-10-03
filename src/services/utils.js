@@ -25,7 +25,7 @@ const validateAndSave = (value = '', {
   onSuccess = () => {} }
 ) => validator.test(value) ? onSuccess(value) : onFail();
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms)); // delay util
+const delay = (ms) => () => new Promise(resolve => setTimeout(resolve, ms)); // delay util
 const pipe  = (...fns) => (init)  => fns.reduce(async (arg, fn) => fn(await arg), init); // fp pipe
 
 const utils = {
