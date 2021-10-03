@@ -9,7 +9,7 @@ const createContact = async (formData) => {
   } catch (e) {
     console.error(e);
   }
-    
+  
   if( !ok ) {
     if ( data.payload.email ) throw new EmailExistsError(`There is already the same email in db.`) ;
     else throw new Error(`There is another error in request.`);

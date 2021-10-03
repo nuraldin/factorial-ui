@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Card, Typography, Tooltip, Alert } from 'antd';
 import { EditOutlined, DeleteOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
-import { validateAndSave, toggle, validators } from '../../../utils';
+import { utils } from '../../../services';
 import Contact from '../../../models/Contact';
 
 import './ContactCard.css';
@@ -24,8 +24,8 @@ function ContactCard(props) {
   
   const editableFields = { 
     name: {
-      validator: validators.NAME,
-      onFail: toggle(setWrongName),
+      validator: utils.validators.NAME,
+      onFail: utils.toggle(setWrongName),
       onSuccess:  ( value ) => { 
         let [firstName, lastName] = value.split(' ');
         currentData.firstName = firstName;
@@ -35,8 +35,8 @@ function ContactCard(props) {
       }
     }, 
     email: {
-      validator: validators.EMAIL,
-      onFail: toggle(setWrongEmail),
+      validator: utils.validators.EMAIL,
+      onFail: utils.toggle(setWrongEmail),
       onSuccess: ( value ) => { 
         currentData.email = value;
         setCurrentData(new Contact({...currentData}));
@@ -44,8 +44,8 @@ function ContactCard(props) {
       }
     },
     phone: {
-      validator: validators.PHONE,
-      onFail: toggle(setWrongPhone),
+      validator: utils.validators.PHONE,
+      onFail: utils.toggle(setWrongPhone),
       onSuccess: (value) => {
         currentData.phoneNumber = value;
         setCurrentData(new Contact({...currentData}));
@@ -55,7 +55,7 @@ function ContactCard(props) {
   };
 
   const editOptions = ( field ) => ({
-    onChange: (value) => validateAndSave(value, editableFields[field])
+    onChange: (value) => utils.validateAndSave(value, editableFields[field])
   });
 
   const editOrConfirm = ( edit ) => {

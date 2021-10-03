@@ -28,10 +28,12 @@ const validateAndSave = (value = '', {
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms)); // delay util
 const pipe  = (...fns) => (init)  => fns.reduce(async (arg, fn) => fn(await arg), init); // fp pipe
 
-export {
+const utils = {
   validators,
   toggle,
   validateAndSave,
   delay,
   pipe
 };
+
+export default utils;

@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { Layout, Tabs } from 'antd';
 import 'antd/dist/antd.css'; 
 
-import { updateContact, deleteContact } from '../services/contact-api/index.js';
 import ContactCards from './contact-cards/ContactCards';
 import HeaderContent from './header-content/HeaderContent';
 import ContactTimeline from './contact-timeline/ContactTimeline';
+
+import { api } from '../services';
 
 import './App.css';
 
@@ -28,8 +29,8 @@ function App() {
           <Tabs defaultActiveKey="1">
             <TabPane tab="Contact Ledger" key="1">
               <ContactCards 
-                onEdit={updateContact} 
-                onDelete={deleteContact}
+                onEdit={api.updateContact} 
+                onDelete={api.deleteContact}
                 onConfirm={toggleRefresh}
                 refresh={refresh}
               />

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { Timeline, Empty } from 'antd';
 
 import RevisionTypes from '../../models/RevisionTypes';
-import { getTimeline } from '../../services/contact-api/index.js';
-
-import { pipe } from '../../utils';
+import { api, utils } from '../../services';
 
 import './ContactTimeline.css';
 
@@ -25,7 +23,7 @@ function itemColor(type) {
 function ContactTimeline(props) {
   const [ timeline, setTimeline ] = useState([]);
 
-  useEffect(() => pipe( getTimeline, setTimeline)(), [props.refresh]);
+  useEffect(() => utils.pipe( api.getTimeline, setTimeline)(), [props.refresh]);
 
   if ( timeline.length > 0 ) {
     return (

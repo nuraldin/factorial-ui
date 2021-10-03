@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import { Row, Col, Empty } from 'antd';
 
 import ContactCard from './contact-card/ContactCard';
-import { getContacts } from '../../services/contact-api/index.js';
-import { delay, pipe } from '../../utils';
+import { api, utils } from '../../services';
 
 function ContactCards(props) {
   const [ contactView, setContactView ] = useState([]);
@@ -21,10 +20,10 @@ function ContactCards(props) {
       contactRows.push(contacts.splice(0, contactsPerRow));
     }
 
-    return contactRows ;
+    return contactRows;
   }; 
 
-  useEffect(() => pipe(delay, getContacts, makeContactView, setContactView)(200), [props.refresh]);
+  useEffect(() => utils.pipe(utils.delay, api.getContacts, makeContactView, setContactView)(200), [props.refresh]);
 
   if ( contactView.length > 0 ) { 
     return (

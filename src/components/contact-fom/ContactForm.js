@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 import { Form, Input, Button, Alert } from 'antd';
 
-import { createContact } from '../../services/contact-api/index.js';
 import { EmailExistsError } from '../../models/index.js';
-import { toggle, validators } from '../../utils.js';
+import { api, utils } from '../../services';
 
 function ContactForm(props) {
   const [form] = Form.useForm();
   const [emailExists, setEmailExists] = useState(false);
+  const [defaultError, setDefaultError] = useState(false);
   
   const defaultRule = (field) => ({
     required: true,
@@ -17,7 +17,7 @@ function ContactForm(props) {
   }); 
   
   const wordRule = (name) => ({
-    pattern: validators.WORD,
+    pattern: utils.validators.WORD,
     ...defaultRule(`${name} name without spaces`)
   });
 
@@ -47,7 +47,7 @@ function ContactForm(props) {
       label: "Phone Number",
       name: "phoneNumber",
       rules: [defaultRule('phone number'), { 
-        pattern: validators.PHONE, 
+        pattern: utils.validators.PHONE, 
         message: 'The phone number should conform to spanish standard'
       }],
       placeholder: "e.g., 111222333"
@@ -56,10 +56,10 @@ function ContactForm(props) {
 
   const postContact = async (values) => {
     try {
-      await createContact(values);
+      await api.createContact(values);
     } catch(e) {
-      if ( e instanceof EmailExistsError ) toggle(setEmailExists);
-      else console.log('there was another error while creating the user');
+      if ( e instanceof EmailExistsError ) utils.toggle(setEmailExists)(); 
+      else utils.toggle(setDefaultError)();
       return;
     }
 
@@ -71,6 +71,7 @@ function ContactForm(props) {
     if ( !props.visible ) {
       form.resetFields();
       setEmailExists(false);
+      setDefaultError(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.visible]);
@@ -81,11 +82,13 @@ function ContactForm(props) {
       name="addContact"
       onFinish={ postContact }
     >
-      {items.map( (item, index) => 
+      { items.map( (item, index) => 
         <Form.Item key={index} label={item.label} name={item.name} rules={item.rules} hasFeedback>
           <Input placeholder={item.placeholder}/>
-        </Form.Item>)}
-      { emailExists ? <Alert style={{marginBottom: '10px' }} message="Email already exists" type="error" showIcon/>: null}
+        </Form.Item>
+      )}
+      { emailExists ? <Alert style={{marginBottom: '10px' }} message="Email already exists" type="error" showIcon/> : null}
+      { defaultError ? <Alert style={{marginBottom: '10px' }} message="There was an error while submitting contact" type="error" showIcon/> : null}
       <Form.Item style={{ float: 'right'}}>
         <Button type="primary" htmlType="submit">
           Submit
